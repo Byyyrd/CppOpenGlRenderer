@@ -70,6 +70,7 @@
     <None Include="FragmentShader.frag" />
     <None Include="Lighting.frag" />
     <None Include="LightSource.frag" />
+    <None Include="Lighting.vert" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="monkey.obj">

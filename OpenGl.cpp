@@ -137,10 +137,12 @@ int OpenGl::start(GLFWwindow* window) {
     BufferObject vbo(GL_ARRAY_BUFFER, vertices);
     //BufferObject ebo(GL_ELEMENT_ARRAY_BUFFER, indices);
 
-    GLsizei stride = 5 * sizeof(GLfloat);
+    GLsizei stride = 6 * sizeof(GLfloat);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3*sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
 
     /*glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);*/
@@ -158,7 +160,7 @@ int OpenGl::start(GLFWwindow* window) {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
     glEnableVertexAttribArray(0);
 
-    Shader lightingShader("VertexShader.vert", "Lighting.frag");
+    Shader lightingShader("Lighting.vert", "Lighting.frag");
     Shader lightCubeShader("VertexShader.vert", "LightSource.frag");
 
 
@@ -173,32 +175,33 @@ int OpenGl::start(GLFWwindow* window) {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        // input
+        // -----
         processInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        // render
+        // ------
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //texture1.Use();
         lightingShader.Use();
         lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        lightingShader.setVec3("lightPos", lightPos);
 
-        // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         lightingShader.setMat4("projection", projection);
         lightingShader.setMat4("view", view);
 
-        // world transformation
         glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, (float)glm::radians(glfwGetTime() * 20), glm::vec3(0.8f, 0.2f, 0.4f));
         lightingShader.setMat4("model", model);
 
-        // render the cube
         vao.Bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-        // also draw the lamp object
         lightCubeShader.Use();
         lightCubeShader.setMat4("projection", projection);
         lightCubeShader.setMat4("view", view);
@@ -209,9 +212,8 @@ int OpenGl::start(GLFWwindow* window) {
 
         ligthVao.Bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
-                 
-        glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 5);
-        
+
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

@@ -166,6 +166,7 @@
   <ItemGroup>
     <None Include="FragmentShader.frag" />
     <None Include="Lighting.frag" />
+    <None Include="Lighting.vert" />
     <None Include="LightSource.frag" />
     <None Include="VertexShader.vert" />
   </ItemGroup>
