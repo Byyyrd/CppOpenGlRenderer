@@ -47,6 +47,9 @@
     <ClInclude Include="ObjLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
@@ -65,6 +68,8 @@
   <ItemGroup>
     <None Include="VertexShader.vert" />
     <None Include="FragmentShader.frag" />
+    <None Include="Lighting.frag" />
+    <None Include="LightSource.frag" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="monkey.obj">
